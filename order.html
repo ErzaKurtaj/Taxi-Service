@@ -3,90 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxi Services</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/order.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiwT_tHOCA5AkphzKRWJ_Kp4Fv-yc83aw&libraries=places"></script>
+    <title>Book a Taxi — Taxi Services</title>
+    <meta name="description" content="Book your taxi in under a minute. Choose a vehicle and track your trips.">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="i18n.js" defer></script>
+    <script src="geo-config.js" defer></script>
+    <script src="geo.js" defer></script>
+    <script src="location-picker.js" defer></script>
     <script src="main.js" defer></script>
+    <script src="booking.js" defer></script>
 </head>
-<body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="order.html">Book Taxi</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="about.html">About Us</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <header>
-            <h1>Taxi Booking Service</h1>
-        </header>
+<body data-page="book">
+    <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
-        <section id="booking">
-            <h2>Book Your Taxi</h2>
-            <div class="foto">
-                <img src="images/taxibook.gif" alt="Taxi Booking">
+    <header class="site-header">
+        <div class="container nav">
+            <a class="brand" href="index.html"><span class="brand-mark"><i class="fas fa-taxi"></i></span> <span data-i18n="brand">Taxi Services</span></a>
+            <button class="nav-toggle" data-i18n-aria="nav.toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                <li><a href="order.html" aria-current="page" data-i18n="nav.book">Book Taxi</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                <li class="lang-switch" role="group" data-i18n-aria="nav.lang" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="sq" aria-pressed="false">SQ</button></li>
+                <li><a class="btn btn--primary btn--sm" href="order.html" data-i18n="nav.cta">Book now</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="page-head">
+            <div class="container">
+                <h1 data-i18n="book.h1">Book your taxi</h1>
+                <p data-i18n="book.sub">Tell us where you're going, pick a vehicle and confirm. It takes under a minute.</p>
             </div>
-            <form id="booking-form">
-                <label for="pickup"><i class="fas fa-map-marker-alt"></i> Pickup Location:</label>
-                <input type="text" id="pickup" name="pickup" placeholder="Enter pickup location" required>
-                <label for="destination"><i class="fas fa-location-arrow"></i> Destination:</label>
-                <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
-                <button type="submit"><i class="fas fa-taxi"></i> Book Taxi</button>
-            </form>
         </section>
 
-        <section class="map-container">
-            <div id="map" style="height: 300px; width: 100%;"></div>
-        </section>
+        <div class="container">
+            <div class="booking-layout">
+                <form class="panel" id="booking-form" novalidate>
+                    <h2 data-i18n="book.details">Trip details</h2>
 
-        <section class="search">
-            <label for="user-location">User Location:</label>
-            <input type="text" id="user-location">
-            <label for="search-destination">Destination:</label>
-            <input type="text" id="search-destination" placeholder="Write destination">
-            <button type="button" onclick="filterTaxis()">Filter Taxis</button>
-        </section>
+                    <div class="field loc-field" data-loc="pickup" data-locate>
+                        <label for="pickup" data-i18n="book.pickup">Pickup location</label>
+                        <div class="input-wrap"><i class="fas fa-circle-dot"></i><input class="input" type="text" id="pickup" name="pickup" data-i18n-placeholder="book.pickup.ph" placeholder="Enter pickup location" required></div>
+                        <div class="field-error" data-error-for="pickup"></div>
+                    </div>
+                    <div class="field loc-field" data-loc="destination">
+                        <label for="destination" data-i18n="book.dest">Destination</label>
+                        <div class="input-wrap"><i class="fas fa-location-dot"></i><input class="input" type="text" id="destination" name="destination" data-i18n-placeholder="book.dest.ph" placeholder="Enter destination" required></div>
+                        <div class="field-error" data-error-for="destination"></div>
+                    </div>
 
-        <!-- Available Taxis Section -->
-        <section id="available-taxis">
-            <h2>Available Taxis</h2>
-            <ul id="available-taxi-list"></ul>
-        </section>
+                    <fieldset class="vehicle-options">
+                        <legend data-i18n="book.vehicle">Choose a vehicle</legend>
+                        <div class="vehicle-choices" id="vehicle-choices">
+                            <button type="button" class="selected" data-vehicle="standard" aria-pressed="true">
+                                <span class="vehicle-choice-icon"><i class="fa-solid fa-car"></i></span>
+                                <span><strong data-i18n="fleet.1.t">Standard</strong><small data-i18n="fleet.1.p">Everyday rides across the city.</small></span>
+                                <span class="choice-check"><i class="fa-solid fa-check"></i></span>
+                            </button>
+                            <button type="button" data-vehicle="comfort" aria-pressed="false">
+                                <span class="vehicle-choice-icon"><i class="fa-solid fa-car"></i></span>
+                                <span><strong data-i18n="fleet.2.t">Comfort</strong><small data-i18n="fleet.2.p">More space and a smoother ride.</small></span>
+                                <span class="choice-check" hidden><i class="fa-solid fa-check"></i></span>
+                            </button>
+                            <button type="button" data-vehicle="van" aria-pressed="false">
+                                <span class="vehicle-choice-icon"><i class="fa-solid fa-car"></i></span>
+                                <span><strong data-i18n="fleet.3.t">Van</strong><small data-i18n="fleet.3.p">Room for groups and luggage.</small></span>
+                                <span class="choice-check" hidden><i class="fa-solid fa-check"></i></span>
+                            </button>
+                        </div>
+                    </fieldset>
 
-        <!-- Booked Taxis Section -->
-        <section id="booked-taxis">
-            <h2>Booked Taxis</h2>
-            <ul id="booked-taxi-list"></ul>
-        </section>
+                    <div class="confirmation-note">
+                        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                        <span data-i18n="book.note">Price and pickup time are confirmed by your driver.</span>
+                    </div>
 
-        <!-- Completed Trips Section -->
-        <section id="completed-trips">
-            <h2>Completed Trips</h2>
-            <ul id="completed-trip-list"></ul>
-            
-        </section>
+                    <button class="btn btn--primary btn--block" type="submit" id="confirm-btn" aria-disabled="true" aria-describedby="booking-hint"><i class="fas fa-taxi"></i> <span data-i18n="book.confirm">Confirm booking</span></button>
+                    <p class="qb-hint" id="booking-hint" data-i18n="loc.needboth">Choose a pickup and a destination to continue.</p>
+                </form>
 
-        <section id="driver-rating">
-            <h2>Rate Your Driver</h2>
-            <form id="driver-rating-form">
-                <label for="driver-name">Driver Name:</label>
-                <input type="text" id="driver-name" name="driver-name" required>
-                <label for="driver-rating">Rating (1-5):</label>
-                <input type="number" id="driver-rating" name="driver-rating" min="1" max="5" required>
-                <button type="submit">Submit Rating</button>
-            </form>
-        </section>
-    </div>
-    
-    <footer>
-        <p>&copy; 2024 Taxi Services. All rights reserved.</p>
-        <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-        </ul>
+                <div class="panel map-panel">
+                    <div id="map" role="region" data-i18n-aria="book.map" aria-label="Map">
+                        <div class="map-fallback"><div><i class="fas fa-map-location-dot"></i><p data-i18n="book.map.loading">Loading map…</p></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="trips" aria-labelledby="trips-title">
+                <h2 id="trips-title" style="margin-top:56px" data-i18n="trips.title">Your trips</h2>
+                <div class="tabs" role="tablist">
+                    <button class="tab" role="tab" id="tab-booked" aria-selected="true" aria-controls="panel-trips" data-tab="booked"><span data-i18n="trips.booked">Booked</span> <span class="count" id="count-booked">0</span></button>
+                    <button class="tab" role="tab" id="tab-completed" aria-selected="false" aria-controls="panel-trips" data-tab="completed"><span data-i18n="trips.completed">Completed</span> <span class="count" id="count-completed">0</span></button>
+                </div>
+                <div id="panel-trips" role="tabpanel" aria-live="polite"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer" style="margin-top:72px">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a class="brand" href="index.html"><span class="brand-mark"><i class="fas fa-taxi"></i></span> <span data-i18n="brand">Taxi Services</span></a>
+                    <p data-i18n="foot.tag">Reliable and comfortable taxi service across the city, 24 hours a day.</p>
+                </div>
+                <div>
+                    <h4 data-i18n="foot.explore">Explore</h4>
+                    <ul>
+                        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                        <li><a href="order.html" data-i18n="nav.book">Book Taxi</a></li>
+                        <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 data-i18n="foot.legal">Legal</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="foot.privacy">Privacy Policy</a></li>
+                        <li><a href="#" data-i18n="foot.terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">&copy; <span data-year>2026</span> <span data-i18n="brand">Taxi Services</span>. <span data-i18n="foot.rights">All rights reserved.</span></div>
+        </div>
     </footer>
 </body>
 </html>

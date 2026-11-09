@@ -1,68 +1,135 @@
-
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxi Services</title>
-    <link rel="stylesheet" href="css/contact.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Contact — Taxi Services</title>
+    <meta name="description" content="Get in touch with Taxi Services. We're available 24/7 and reply to messages within 24 hours.">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="i18n.js" defer></script>
+    <script src="main.js" defer></script>
 </head>
-<body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="order.html">Book Taxi</a></li>
-            <li><a href="contact.html" class="active">Contact Us</a></li>
-            <li><a href="about.html">About Us</a></li>
-        </ul>
-    </nav>
-    
-    <section class="working-hours">
-        <p>Working Hours</p>
-        <p>We are committed to providing exceptional service to our clients, which is why our team is available 24/7, every day of the year.</p>
-        <p>Whether it's a weekday, weekend, or holiday, our dedicated staff is always ready to assist you with your needs.</p>
-    </section>
+<body data-page="contact">
+    <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
-    <section id="contact-form-faq">
-        <div class="faq-content">
-            <ul>
-                <h3 class="moving-heading">How to use the contact form?</h3>
-                <li class="text">Fill out your name, email, and message in the respective fields.</li>
-                <li class="text">Click "Send Message" to submit your query.</li>
-                <li class="text">We will respond to your message within 24 hours.</li>
+    <header class="site-header">
+        <div class="container nav">
+            <a class="brand" href="index.html"><span class="brand-mark"><i class="fas fa-taxi"></i></span> <span data-i18n="brand">Taxi Services</span></a>
+            <button class="nav-toggle" data-i18n-aria="nav.toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                <li><a href="order.html" data-i18n="nav.book">Book Taxi</a></li>
+                <li><a href="contact.html" aria-current="page" data-i18n="nav.contact">Contact</a></li>
+                <li class="lang-switch" role="group" data-i18n-aria="nav.lang" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="sq" aria-pressed="false">SQ</button></li>
+                <li><a class="btn btn--primary btn--sm" href="order.html" data-i18n="nav.cta">Book now</a></li>
             </ul>
-            <div class="image">
-                <img src="images/question.gif" alt="Image description">
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="page-head">
+            <div class="container">
+                <h1 data-i18n="contact.h1">Get in touch</h1>
+                <p data-i18n="contact.sub">Questions, feedback or special requests? We're here around the clock.</p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="contact-form-container">
-        <div id="contact-form-section">
-            <h2>Contact Us</h2>
-            <form id="contact-form">
-                <label for="name">Your Name:</label>
-                <input type="text" id="name" name="name" required>
-                
-                <label for="email">Your Email:</label>
-                <input type="email" id="email" name="email" required>
-                
-                <label for="message">Your Message:</label>
-                <textarea id="message" name="message" rows="4" required></textarea>
-                
-                <button type="submit">Send Message</button>
-            </form>
-        </div>
-    </section>
+        <div class="container">
+            <div class="contact-layout">
+                <aside class="panel">
+                    <h2 data-i18n="contact.avail">We're always available</h2>
+                    <ul class="info-list">
+                        <li>
+                            <div class="icon-badge"><i class="fas fa-clock"></i></div>
+                            <div><strong data-i18n="contact.hours">Working hours</strong><span data-i18n="contact.hours.p">24/7, every day of the year, including weekends and holidays.</span></div>
+                        </li>
+                        <li>
+                            <div class="icon-badge"><i class="fas fa-phone"></i></div>
+                            <div><strong data-i18n="contact.phone">Phone</strong><span>+000 00 000 000</span></div>
+                        </li>
+                        <li>
+                            <div class="icon-badge"><i class="fas fa-envelope"></i></div>
+                            <div><strong data-i18n="contact.email">Email</strong><span>info@example.com</span></div>
+                        </li>
+                        <li>
+                            <div class="icon-badge"><i class="fas fa-reply"></i></div>
+                            <div><strong data-i18n="contact.resp">Response time</strong><span data-i18n="contact.resp.p">We reply to every message within 24 hours.</span></div>
+                        </li>
+                    </ul>
+                </aside>
 
-    <footer>
-        <p>&copy; 2024 Taxi Services. All rights reserved.</p>
-        <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-        </ul>
+                <section class="panel" aria-labelledby="form-title">
+                    <h2 id="form-title" data-i18n="contact.form">Send us a message</h2>
+                    <div class="notice" id="contact-success" role="status" data-i18n="contact.ok">Thanks! Your message is ready to send. We'll get back to you within 24 hours.</div>
+                    <form id="contact-form" novalidate>
+                        <div class="field">
+                            <label for="name" data-i18n="contact.name">Your name</label>
+                            <input class="input" type="text" id="name" name="name" autocomplete="name" required>
+                            <div class="field-error" data-error-for="name"></div>
+                        </div>
+                        <div class="field">
+                            <label for="email" data-i18n="contact.mail">Your email</label>
+                            <input class="input" type="email" id="email" name="email" autocomplete="email" required>
+                            <div class="field-error" data-error-for="email"></div>
+                        </div>
+                        <div class="field">
+                            <label for="message" data-i18n="contact.msg">Your message</label>
+                            <textarea class="textarea" id="message" name="message" rows="5" required></textarea>
+                            <div class="field-error" data-error-for="message"></div>
+                        </div>
+                        <button class="btn btn--primary" type="submit"><i class="fas fa-paper-plane"></i> <span data-i18n="contact.send">Send message</span></button>
+                    </form>
+                </section>
+            </div>
+
+            <section class="faq" aria-labelledby="faq-title">
+                <h2 id="faq-title" style="text-align:center;margin-bottom:24px" data-i18n="faq.h2">Frequently asked questions</h2>
+                <details>
+                    <summary data-i18n="faq.1.q">How do I use the contact form?</summary>
+                    <p data-i18n="faq.1.a">Fill in your name, email and message, then click "Send message". We'll reply to the email you provide.</p>
+                </details>
+                <details>
+                    <summary data-i18n="faq.2.q">How quickly will I get a response?</summary>
+                    <p data-i18n="faq.2.a">We respond to every message within 24 hours. For urgent trips, it's fastest to book directly on the Book Taxi page.</p>
+                </details>
+                <details>
+                    <summary data-i18n="faq.3.q">Can I book for a large group?</summary>
+                    <p data-i18n="faq.3.a">Yes. Our Golden VIP Van seats up to 14 passengers, and the Radio Taxi up to 11.</p>
+                </details>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer" style="margin-top:72px">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a class="brand" href="index.html"><span class="brand-mark"><i class="fas fa-taxi"></i></span> <span data-i18n="brand">Taxi Services</span></a>
+                    <p data-i18n="foot.tag">Reliable and comfortable taxi service across the city, 24 hours a day.</p>
+                </div>
+                <div>
+                    <h4 data-i18n="foot.explore">Explore</h4>
+                    <ul>
+                        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                        <li><a href="order.html" data-i18n="nav.book">Book Taxi</a></li>
+                        <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 data-i18n="foot.legal">Legal</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="foot.privacy">Privacy Policy</a></li>
+                        <li><a href="#" data-i18n="foot.terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">&copy; <span data-year>2026</span> <span data-i18n="brand">Taxi Services</span>. <span data-i18n="foot.rights">All rights reserved.</span></div>
+        </div>
     </footer>
 </body>
 </html>

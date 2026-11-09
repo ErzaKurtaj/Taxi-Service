@@ -1,109 +1,277 @@
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shërbime Taxi</title>
+    <title>Taxi Services</title>
+    <meta name="description" content="Book a safe, comfortable taxi across the city in under a minute. City rides, airport transfers and group travel, available 24/7.">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="i18n.js" defer></script>
+    <script src="geo-config.js" defer></script>
+    <script src="geo.js" defer></script>
+    <script src="location-picker.js" defer></script>
+    <script src="main.js" defer></script>
 </head>
-<body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="order.html">Book Taxi</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="about.html">About Us</a></li>
-        </ul>
-    </nav>
-        <!-- Hero Section -->
+<body data-page="home">
+    <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+    <header class="site-header">
+        <div class="container nav">
+            <a class="brand" href="index.html"><span class="brand-mark"><i class="fas fa-taxi"></i></span> <span data-i18n="brand">Taxi Services</span></a>
+            <button class="nav-toggle" data-i18n-aria="nav.toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" aria-current="page" data-i18n="nav.home">Home</a></li>
+                <li><a href="order.html" data-i18n="nav.book">Book Taxi</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                <li class="lang-switch" role="group" data-i18n-aria="nav.lang" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="sq" aria-pressed="false">SQ</button></li>
+                <li><a class="btn btn--primary btn--sm" href="order.html" data-i18n="nav.cta">Book now</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main id="main">
+        <!-- Hero -->
         <section class="hero">
-            <div class="hero-text">
-                <h1>Welcome to Taxi Services</h1>
-                <p>Your reliable and comfortable taxi service across the city.</p>
-                <a href="order.html" class="btn">Book Now</a>
+            <div class="container hero-grid">
+                <div>
+                    <span class="eyebrow" style="color: var(--yellow)" data-i18n="hero.eyebrow">Available 24/7</span>
+                    <h1 data-i18n-html="hero.h1">Your ride is <em>one tap</em> away.</h1>
+                    <p class="lead" data-i18n="hero.lead">Reliable, comfortable taxi service across the city, with professional drivers and clear pricing. Solo, with friends, or with the whole group.</p>
+                    <div class="hero-actions">
+                        <a href="order.html" class="btn btn--yellow" data-i18n="hero.cta1">Book a taxi</a>
+                        <a href="#fleet" class="btn btn--ghost" data-i18n="hero.cta2">See our fleet</a>
+                    </div>
+                    <ul class="hero-badges">
+                        <li><i class="fas fa-shield-halved"></i><span data-i18n="badge.1">Licensed drivers</span></li>
+                        <li><i class="fas fa-tag"></i><span data-i18n="badge.2">No hidden fees</span></li>
+                        <li><i class="fas fa-clock"></i><span data-i18n="badge.3">Always on time</span></li>
+                    </ul>
+                </div>
+
+                <form class="quick-book" id="quick-book" action="order.html" method="get" novalidate>
+                    <h2 data-i18n="qb.title">Where to?</h2>
+                    <p class="sub" data-i18n="qb.sub">Enter your trip and pick the rest on the next step.</p>
+                    <div class="field loc-field" data-loc="pickup" data-locate>
+                        <label for="qb-pickup" data-i18n="qb.pickup">Pickup</label>
+                        <div class="input-wrap"><i class="fas fa-circle-dot"></i><input class="input" id="qb-pickup" name="pickup" data-i18n-placeholder="qb.pickup.ph" placeholder="Pickup location" required></div>
+                        <div class="field-error" data-error-for="qb-pickup"></div>
+                    </div>
+                    <div class="field loc-field" data-loc="destination">
+                        <label for="qb-dest" data-i18n="qb.dest">Destination</label>
+                        <div class="input-wrap"><i class="fas fa-location-dot"></i><input class="input" id="qb-dest" name="destination" data-i18n-placeholder="qb.dest.ph" placeholder="Where are you going?" required></div>
+                        <div class="field-error" data-error-for="qb-dest"></div>
+                    </div>
+                    <button class="btn btn--primary btn--block" type="submit" aria-disabled="true" aria-describedby="qb-hint"><span data-i18n="qb.continue">Continue</span> <i class="fas fa-arrow-right"></i></button>
+                    <p class="qb-hint" id="qb-hint" data-i18n="loc.needboth">Choose a pickup and a destination to continue.</p>
+                </form>
             </div>
         </section>
-            <!-- Information Section -->
-            <section class="info-section">
-                <div class="info-content">
-                    <img src="images/taxi.gif" alt="Information Image">
-                    <div class="info-text">
-                        <h2>Taxi Services</h2>
-                        <p>We provide reliable and comfortable taxi services across the city. Our fleet consists of a variety of vehicles to suit your needs, whether you are traveling alone or with a group. Enjoy a safe and pleasant ride with our professional drivers. Book your ride now and experience the best taxi service in town!</p>
-                    </div>
+
+        <!-- Stats -->
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat"><strong>24/7</strong><span data-i18n="stat.1">Every day of the year</span></div>
+                    <div class="stat"><strong>~5 min</strong><span data-i18n="stat.2">Average pickup time</span></div>
+                    <div class="stat"><strong>14</strong><span data-i18n="stat.3">Seats in our largest van</span></div>
+                    <div class="stat"><strong>4.9★</strong><span data-i18n="stat.4">Average driver rating</span></div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="services" id="services">
-                <h2>Our Services</h2>
-                <div class="service-container">
-                    <div class="service-item">
-                        <i class="fas fa-taxi"></i>
-                        <h3>City Rides</h3>
-                        <p>Get around the city quickly and comfortably with our city ride service.</p>
-                    </div>
-                    <div class="service-item">
-                        <i class="fas fa-plane"></i>
-                        <h3>Airport Transfers</h3>
-                        <p>Reliable airport transfers to ensure you catch your flight on time.</p>
-                    </div>
-                    <div class="service-item">
-                        <i class="fas fa-users"></i>
-                        <h3>Group Travel</h3>
-                        <p>Travel with your friends and family with our spacious group travel options.</p>
-                    </div>
+        <!-- Services -->
+        <section class="section" id="services">
+            <div class="container">
+                <div class="section-head section-head--center reveal">
+                    <span class="eyebrow" data-i18n="svc.eyebrow">What we do</span>
+                    <h2 data-i18n="svc.h2">A ride for every occasion</h2>
+                    <p class="lead" data-i18n="svc.lead">From a quick hop across town to a late flight, we have you covered.</p>
                 </div>
-            </section>
-
-
-            <!-- Fleet Section -->
-            <div class="fleet">
-              <h2>Our Fleet</h2>
-              <p>We specialize in small group private transfers which may accommodate up to 14 people</p>
-              <div class="fleet-container">
-                  <div class="fleet-item">
-                      <img src="images/bluetaxi.jpg" >
-                      <p>Blue Taxi (4-seater)</p>
-                  </div>
-                  <div class="fleet-item">
-                      <img src="images/radiotaxi.jpg">
-                      <p>Radio Taxi (11-seater)</p>
-                  </div>
-                  <div class="fleet-item">
-                      <img src="images/golden.jpg" >
-                      <p>Golden Vip Van (14-seater)</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <!-- Testimonials Section -->
-      <section class="testimonials" id="testimonials">
-        <h2>Testimonials</h2>
-        <div class="testimonial-container">
-            <div class="testimonial-item">
-                <p>"Excellent service! The driver was on time and very professional."</p>
-                <h4>- John Doe</h4>
+                <div class="grid grid--3">
+                    <article class="card reveal">
+                        <div class="icon-badge"><i class="fas fa-taxi"></i></div>
+                        <h3 data-i18n="svc.1.t">City rides</h3>
+                        <p data-i18n="svc.1.p">Get around quickly and comfortably, with a clean car and a driver who knows the shortcuts.</p>
+                    </article>
+                    <article class="card reveal">
+                        <div class="icon-badge"><i class="fas fa-plane-departure"></i></div>
+                        <h3 data-i18n="svc.2.t">Airport transfers</h3>
+                        <p data-i18n="svc.2.p">Flight delayed? We keep track. Reliable transfers so you never miss a departure.</p>
+                    </article>
+                    <article class="card reveal">
+                        <div class="icon-badge"><i class="fas fa-users"></i></div>
+                        <h3 data-i18n="svc.3.t">Group travel</h3>
+                        <p data-i18n="svc.3.p">Spacious vans for up to 14 passengers: perfect for families, tours and events.</p>
+                    </article>
+                </div>
             </div>
-            <div class="testimonial-item">
-                <p>"Great experience! The car was clean and the ride was smooth."</p>
-                <h4>- Jane Smith</h4>
+        </section>
+
+        <!-- Why us -->
+        <section class="section section--alt">
+            <div class="container split">
+                <img class="reveal" src="images/taxi.gif" alt="Taxi driving through the city" data-i18n-alt="why.alt" loading="lazy">
+                <div class="reveal">
+                    <span class="eyebrow" data-i18n="why.eyebrow">Why riders choose us</span>
+                    <h2 data-i18n="why.h2">Safe, comfortable, and on your schedule.</h2>
+                    <p class="lead" data-i18n="why.lead">Our fleet suits solo travellers and large groups alike, and every ride is handled by a professional driver.</p>
+                    <ul class="checklist">
+                        <li><i class="fas fa-circle-check"></i><span data-i18n-html="why.1"><strong>Professional drivers.</strong> Vetted, experienced and courteous.</span></li>
+                        <li><i class="fas fa-circle-check"></i><span data-i18n-html="why.2"><strong>Clear pricing.</strong> See an estimate before you confirm.</span></li>
+                        <li><i class="fas fa-circle-check"></i><span data-i18n-html="why.3"><strong>Clean, modern vehicles.</strong> From compact cars to VIP vans.</span></li>
+                    </ul>
+                </div>
             </div>
-            <div class="testimonial-item">
-                <p>"Highly recommend this taxi service. Very reliable and comfortable."</p>
-                <h4>- Robert Johnson</h4>
+        </section>
+
+        <!-- How it works -->
+        <section class="section">
+            <div class="container">
+                <div class="section-head section-head--center reveal">
+                    <span class="eyebrow" data-i18n="how.eyebrow">How it works</span>
+                    <h2 data-i18n="how.h2">Booking takes under a minute</h2>
+                </div>
+                <div class="grid grid--3 steps">
+                    <div class="step reveal"><h3 data-i18n="how.1.t">Enter your trip</h3><p data-i18n="how.1.p">Tell us where to pick you up and where you're headed.</p></div>
+                    <div class="step reveal"><h3 data-i18n="how.2.t">Choose a vehicle</h3><p data-i18n="how.2.p">Pick the size that fits your group and see your estimated fare.</p></div>
+                    <div class="step reveal"><h3 data-i18n="how.3.t">Ride &amp; rate</h3><p data-i18n="how.3.p">Your driver arrives in minutes. Rate the trip when you're done.</p></div>
+                </div>
             </div>
+        </section>
+
+        <!-- Fleet -->
+        <section class="section fleet-section" id="fleet">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <span class="eyebrow" data-i18n="fleet.eyebrow">Our fleet</span>
+                        <h2 data-i18n="fleet.h2">Choose the ride that fits your trip</h2>
+                    </div>
+                    <p data-i18n="fleet.lead">Clean, comfortable vehicles for every journey, from solo rides to the whole group.</p>
+                </div>
+
+                <div class="fleet-grid">
+                    <article class="fleet-card">
+                        <div class="fleet-photo">
+                            <img src="images/taxi.jpg" alt="" loading="lazy" />
+                        </div>
+                        <div class="fleet-content">
+                            <h3 data-i18n="fleet.1.t">Standard</h3>
+                            <p data-i18n="fleet.1.p">Everyday rides across the city.</p>
+                            <div class="specs">
+                                <span><i class="fa-solid fa-users"></i> <span data-i18n="fleet.1.pax">4 passengers</span></span>
+                                <span><i class="fa-solid fa-briefcase"></i> <span data-i18n="fleet.1.bags">2 bags</span></span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="fleet-card">
+                        <div class="fleet-photo">
+                            <img src="images/tax2.jpg" alt="" loading="lazy" />
+                        </div>
+                        <div class="fleet-content">
+                            <h3 data-i18n="fleet.2.t">Comfort</h3>
+                            <p data-i18n="fleet.2.p">More space and a smoother ride.</p>
+                            <div class="specs">
+                                <span><i class="fa-solid fa-users"></i> <span data-i18n="fleet.2.pax">4 passengers</span></span>
+                                <span><i class="fa-solid fa-briefcase"></i> <span data-i18n="fleet.2.bags">4 bags</span></span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="fleet-card">
+                        <div class="fleet-photo">
+                            <img src="images/van.jpg" alt="" loading="lazy" />
+                        </div>
+                        <div class="fleet-content">
+                            <h3 data-i18n="fleet.3.t">Van</h3>
+                            <p data-i18n="fleet.3.p">Room for groups and luggage.</p>
+                            <div class="specs">
+                                <span><i class="fa-solid fa-users"></i> <span data-i18n="fleet.3.pax">6 passengers</span></span>
+                                <span><i class="fa-solid fa-briefcase"></i> <span data-i18n="fleet.3.bags">4 bags</span></span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="section testimonials" id="testimonials">
+            <div class="container">
+                <span class="eyebrow" data-i18n="test.eyebrow">Testimonials</span>
+                <h2 data-i18n="test.h2">What our riders say</h2>
+
+                <div class="quote-grid">
+                    <blockquote>
+                        <div class="stars" aria-hidden="true">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p data-i18n="test.1">“The driver arrived early and made our airport trip completely stress-free.”</p>
+                        <footer data-i18n="test.1.n">— Arta K.</footer>
+                    </blockquote>
+
+                    <blockquote>
+                        <div class="stars" aria-hidden="true">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p data-i18n="test.2">“Clean car, friendly service, and the booking could not have been easier.”</p>
+                        <footer data-i18n="test.2.n">— Leon B.</footer>
+                    </blockquote>
+
+                    <blockquote>
+                        <div class="stars" aria-hidden="true">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p data-i18n="test.3">“My first choice for business trips around Prishtina. Always professional.”</p>
+                        <footer data-i18n="test.3.n">— Mira H.</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-band">
+            <div class="container cta-inner">
+                <div>
+                    <h2 data-i18n="cta.h2">Ready when you are.</h2>
+                    <p data-i18n="cta.p">Tell us where you need to go. Your driver will confirm the details.</p>
+                </div>
+                <a href="order.html" class="cta-btn"><span data-i18n="hero.cta1">Book a taxi</span> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a class="brand" href="index.html"><span class="brand-mark"><i class="fas fa-taxi"></i></span> <span data-i18n="brand">Taxi Services</span></a>
+                    <p data-i18n="foot.tag">Reliable and comfortable taxi service across the city, 24 hours a day.</p>
+                </div>
+                <div>
+                    <h4 data-i18n="foot.explore">Explore</h4>
+                    <ul>
+                        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+                        <li><a href="order.html" data-i18n="nav.book">Book Taxi</a></li>
+                        <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 data-i18n="foot.legal">Legal</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="foot.privacy">Privacy Policy</a></li>
+                        <li><a href="#" data-i18n="foot.terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">&copy; <span data-year>2026</span> <span data-i18n="brand">Taxi Services</span>. <span data-i18n="foot.rights">All rights reserved.</span></div>
         </div>
-    </section>
-
-      <footer>
-        <p>&copy; 2024 Shërbime Taxi. All rights reserved.</p>
-        <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-        </ul>
     </footer>
 </body>
 </html>

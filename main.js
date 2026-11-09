@@ -1,175 +1,109 @@
+// Shared behaviour for every page: mobile nav, footer year, scroll reveal, contact form.
+(function () {
+    'use strict';
 
-// Global variable for the map
-let map;
-
-// Arrays for booked taxis and completed trips (initially declared)
-let taxis = [];
-let trips = [];
-
-// Function to initialize the map
-function initMap() {
-    const mapOptions = {
-        center: { lat: 40.7128, lng: -74.0060 }, // Example coordinates (New York City)
-        zoom: 12
-    };
-
-    // Creating the map in the div with id "map"
-    map = new google.maps.Map(document.getElementById("map"), mapOptions);
-}
-
-// Function to display the list of booked taxis on the page
-function displayTaxis() {
-    const taxiList = document.getElementById('booked-taxi-list');
-    taxiList.innerHTML = '';
-    const bookedTaxis = taxis.filter(taxi => taxi.status === 'booked');
-    bookedTaxis.forEach(taxi => {
-        const li = document.createElement('li');
-        li.textContent = `Model: ${taxi.model} | Pickup: ${taxi.pickup} | Destination: ${taxi.destination} | Wait Time: ${taxi.waitTime} | Estimated Price: ${taxi.estimatedPrice}`;
-        taxiList.appendChild(li);
-    });
-}
-
-// Function to display the list of completed trips on the page
-function displayTrips() {
-    const tripHistory = document.getElementById('completed-trip-list');
-    tripHistory.innerHTML = '';
-    trips.forEach(trip => {
-        const li = document.createElement('li');
-        li.textContent = `From ${trip.pickup} to ${trip.destination} | Driver: ${trip.driver} | Rating: ${trip.rating}`;
-        tripHistory.appendChild(li);
-    });
-}
-
-// Function to initialize the display when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    loadDataFromLocalStorage(); // Load data from localStorage
-    displayTaxis(); // Display the list of booked taxis
-    displayTrips(); // Display the list of completed trips
-    initMap(); // Initialize the map on the page (if necessary)
-});
-
-// Event listener for the taxi booking form submission
-document.getElementById('booking-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const pickupLocation = document.getElementById('pickup').value;
-    const destination = document.getElementById('destination').value;
-    
-    // Simple alert to show the booking submission
-    alert(`Taxi booked from ${pickupLocation} to ${destination}`);
-    
-    // Create a new driver for the new trip
-    const newDriver = `Driver ${trips.length + 1}`;
-    
-    // Create a new trip object to add to the trips array
-    const newTrip = {
-        id: trips.length + 1,
-        pickup: pickupLocation,
-        destination: destination,
-        driver: newDriver,
-        rating: 0 // Initialize rating as 0 (not rated yet)
-    };
-    
-    // Add the new trip to the trips array
-    trips.push(newTrip);
-    
-    // Create a new booked taxi to add to the taxis array
-    const newTaxi = {
-        id: taxis.length + 1,
-        model: 'New Taxi Model',
-        waitTime: '5 minutes',
-        estimatedPrice: '$15',
-        pickup: pickupLocation,
-        destination: destination,
-        status: 'booked'
-    };
-    
-    // Add the new booked taxi to the taxis array
-    taxis.push(newTaxi);
-    
-    // Update the list of booked taxis and completed trips on the page
-    displayTaxis();
-    displayTrips();
-    saveDataToLocalStorage(); // Save data to localStorage
-});
-
-
-// Event listener for the driver rating form submission
-document.getElementById('driver-rating-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const driverName = document.getElementById('driver-name').value;
-    const ratingInput = document.getElementById('driver-rating').value;
-
-    // Check and convert the rating value to an integer
-    const rating = parseFloat(ratingInput); // Use parseFloat instead of parseInt
-
-    // Debugging messages to check input values
-    console.log('Driver Name:', driverName);
-    console.log('Rating Input:', ratingInput);
-    console.log('Parsed Rating:', rating);
-
-    // Check if the rating is valid (between 1 and 5)
-    if (isNaN(rating) || rating < 1 || rating > 5) {
-        alert('Please enter a valid rating between 1 and 5.');
-        return;
+    // Mobile navigation toggle
+    var toggle = document.querySelector('.nav-toggle');
+    var links = document.getElementById('nav-links');
+    if (toggle && links) {
+        toggle.addEventListener('click', function () {
+            var open = links.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', String(open));
+            toggle.querySelector('i').className = open ? 'fas fa-xmark' : 'fas fa-bars';
+        });
+        links.addEventListener('click', function (e) {
+            if (e.target.closest('a')) {
+                links.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+        });
     }
-    
-    // Find the trip for the given driver and update the rating if found
-    const trip = trips.find(trip => trip.driver === driverName);
-    if (trip) {
-        trip.rating = rating;
-        displayTrips(); // Update the list of completed trips on the page
-        alert(`Rating ${rating} submitted for driver ${driverName}`);
-        saveDataToLocalStorage(); // Save data to localStorage
+
+    // Footer year
+    document.querySelectorAll('[data-year]').forEach(function (el) {
+        el.textContent = new Date().getFullYear();
+    });
+
+    // Scroll reveal
+    // Every content section fades in as it scrolls into view. The first screen (hero / page header) stays visible.
+    document.querySelectorAll(
+        'main > section:not(.hero):not(.page-head):not(.page-hero), .booking-layout, .contact-layout, .faq, .trips'
+    ).forEach(function (el) { el.classList.add('reveal'); });
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-in');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+        revealEls.forEach(function (el) { io.observe(el); });
     } else {
-        alert(`No trip found for driver ${driverName}`);
-    }
-    
-    // Clear the input fields after submission (optional)
-    document.getElementById('driver-name').value = '';
-    document.getElementById('driver-rating').value = '';
-});
-
-// Function to save data to localStorage
-function saveDataToLocalStorage() {
-    localStorage.setItem('taxis', JSON.stringify(taxis));
-    localStorage.setItem('trips', JSON.stringify(trips));
-}
-
-// Function to load data from localStorage
-function loadDataFromLocalStorage() {
-    const storedTaxis = localStorage.getItem('taxis');
-    if (storedTaxis) {
-        taxis = JSON.parse(storedTaxis);
+        revealEls.forEach(function (el) { el.classList.add('is-in'); });
     }
 
-    const storedTrips = localStorage.getItem('trips');
-    if (storedTrips) {
-        trips = JSON.parse(storedTrips);
+    // Home quick-booking form: Continue unlocks once pickup and destination both have coordinates.
+    var qb = document.getElementById('quick-book');
+    if (qb && window.LocationPicker) {
+        var qf = LocationPicker.init(qb);
+        var qbBtn = qb.querySelector('[type="submit"]');
+        var qbHint = document.getElementById('qb-hint');
+        var syncQb = function () {
+            var ok = !!(qf.pickup.get() && qf.destination.get());
+            qbBtn.setAttribute('aria-disabled', String(!ok));
+            qbHint.hidden = ok;
+        };
+        qb.addEventListener('locationchange', syncQb);
+        syncQb();
+        qb.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var p = qf.pickup.validate(), d = qf.destination.validate();
+            if (!p || !d) { (p ? qf.destination : qf.pickup).input.focus(); return; }
+            var a = qf.pickup.get(), b = qf.destination.get();
+            var params = new URLSearchParams({
+                pickup: a.address, pickup_lat: a.lat.toFixed(6), pickup_lng: a.lng.toFixed(6),
+                destination: b.address, destination_lat: b.lat.toFixed(6), destination_lng: b.lng.toFixed(6)
+            });
+            location.href = 'order.html?' + params.toString();
+        });
     }
-}
 
-// Function to filter taxis based on the user's location and desired destination
-function filterTaxis() {
-    const userLocation = document.getElementById('user-location').value;
-    const destination = document.getElementById('destination').value;
-
-    // Filter taxis based on the user's location and desired destination
-    const filteredTaxis = taxis.filter(taxi =>
-        taxi.pickup === userLocation &&
-        taxi.destination.toLowerCase().includes(destination.toLowerCase())
-    );
-
-    displayFilteredTaxis(filteredTaxis);
-}
-
-// Function to display the filtered taxis on the page
-function displayFilteredTaxis(taxis) {
-    const taxiList = document.getElementById('available-taxi-list');
-    taxiList.innerHTML = '';
-
-    taxis.forEach(taxi => {
-        const li = document.createElement('li');
-        li.textContent = `Model: ${taxi.model} | Waiting Time: ${taxi.waitTime} | Estimated Price: ${taxi.estimatedPrice}`;
-        taxiList.appendChild(li);
-    });
-}
+    // Contact form validation (front-end only; no backend is connected yet)
+    var form = document.getElementById('contact-form');
+    if (form) {
+        var setError = function (field, key) {
+            var slot = form.querySelector('[data-error-for="' + field.id + '"]');
+            if (slot) {
+                // data-i18n keeps the message translated if the language is switched
+                if (key) { slot.setAttribute('data-i18n', key); slot.textContent = I18N.t(key); }
+                else { slot.removeAttribute('data-i18n'); slot.textContent = ''; }
+            }
+            field.setAttribute('aria-invalid', key ? 'true' : 'false');
+        };
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var ok = true;
+            ['name', 'email', 'message'].forEach(function (id) {
+                var f = form.elements[id];
+                var v = f.value.trim();
+                var msg = '';
+                if (!v) msg = 'err.required';
+                else if (id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = 'err.email';
+                setError(f, msg);
+                if (msg) ok = false;
+            });
+            var notice = document.getElementById('contact-success');
+            if (ok) {
+                form.reset();
+                notice.classList.add('is-visible');
+                notice.focus && notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                notice.classList.remove('is-visible');
+                var firstBad = form.querySelector('[aria-invalid="true"]');
+                if (firstBad) firstBad.focus();
+            }
+        });
+    }
+})();
